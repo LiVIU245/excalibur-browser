@@ -2,6 +2,8 @@ import { sendEntry, type ApiOptions } from './api';
 import { BreadcrumbBuffer, type Breadcrumb } from './breadcrumbs';
 import { collectEnvironment } from './environment';
 import { applyLimits } from './limits';
+import { SendGuard } from './send-guard';
+import { ApiError } from './errors';
 import { collectRequest } from './request';
 import { SessionManager } from './session';
 import { parseStackTrace, toWireFrame } from './stack-trace';
@@ -56,6 +58,7 @@ export class ExcaliburClient {
   private readonly hooks: WindowHooks;
   private readonly options: Partial<ExcaliburClientOptions>;
   private user: UserDetails | null = null;
+  private readonly guard = new SendGuard();
 
   constructor(options: { apiKey: string } & Partial<ExcaliburClientOptions>) {
     this.options = options;
@@ -124,8 +127,18 @@ export class ExcaliburClient {
       ? this.options.beforeSend(payload)
       : payload;
     if (!final) return;
+    if (!this.guard.allow(final)) return;
 
-    await sendEntry(applyLimits(final), this.apiOptions);
+    try {
+      await sendEntry(applyLimits(final), this.apiOptions);
+    } catch (sendError) {
+      // Server asked us to wait: pause quietly instead of failing every send
+      if (sendError instanceof ApiError && this.guard.backOff(sendError.response)) {
+        console.warn(`[excalibur] ${sendError.response.status} from ingest, pausing sends`);
+        return;
+      }
+      throw sendError;
+    }
   }
 
   private buildPayload(error: Error, extras?: CaptureExtras): IngestPayload {
