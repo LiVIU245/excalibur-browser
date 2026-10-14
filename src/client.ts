@@ -1,6 +1,7 @@
 import { sendEntry, type ApiOptions } from './api';
 import { BreadcrumbBuffer, type Breadcrumb } from './breadcrumbs';
 import { collectEnvironment } from './environment';
+import { applyLimits } from './limits';
 import { collectRequest } from './request';
 import { SessionManager } from './session';
 import { parseStackTrace, toWireFrame } from './stack-trace';
@@ -124,7 +125,7 @@ export class ExcaliburClient {
       : payload;
     if (!final) return;
 
-    await sendEntry(final, this.apiOptions);
+    await sendEntry(applyLimits(final), this.apiOptions);
   }
 
   private buildPayload(error: Error, extras?: CaptureExtras): IngestPayload {
