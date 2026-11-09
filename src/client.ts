@@ -25,6 +25,9 @@ export interface ExcaliburClientOptions {
   /** Application version reported with every entry. */
   version: string;
 
+  /** Deployment environment (production, staging...) reported with every entry. */
+  environment: string;
+
   /** Tags appended to every entry. */
   tags: string[];
 
@@ -157,6 +160,7 @@ export class ExcaliburClient {
         Client: { Name: CLIENT_NAME, Version: CLIENT_VERSION },
         Request: collectRequest(),
         Version: this.options.version,
+        DeploymentEnvironment: this.options.environment,
         Tags: tags.length ? tags : undefined,
         UserCustomData: extras?.customData,
         User: toWireUser(this.user ?? anonymousUser()),

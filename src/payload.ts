@@ -63,6 +63,7 @@ export interface IngestPayloadDetails {
   Tags?: string[];
   Request?: WireRequest;
   Version?: string;
+  DeploymentEnvironment?: string;
   User?: WireUser;
   SessionId?: string;
   Breadcrumbs?: WireBreadcrumb[];

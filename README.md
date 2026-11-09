@@ -33,6 +33,7 @@ const excalibur = new ExcaliburClient({
   apiKey: 'exc_xxxxxxxxxxxxxxxx',
   endpoint: 'https://excalibur.example.com/api/entries',
   version: '1.4.2',
+  environment: 'staging',
 });
 
 // Capture uncaught errors + unhandled promise rejections
@@ -90,6 +91,7 @@ try {
 | `apiKey`          | — (required)   | SDK key minted with the application (`exc_...`)      |
 | `endpoint`        | `/api/entries` | Absolute URL or path relative to the current origin  |
 | `version`         | —              | Application version reported with every entry        |
+| `environment`     | `production`   | Deployment environment reported with every entry     |
 | `tags`            | `[]`           | Tags appended to every entry                         |
 | `fetch`           | global fetch   | Alternative fetch (edge workers, tests)              |
 | `beforeSend`      | —              | Mutate a payload before sending; return null to drop |
