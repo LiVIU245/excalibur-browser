@@ -1,5 +1,5 @@
 {
-  "name": "@excalibur/browser",
+  "name": "@excalibur-js/browser",
   "description": "Browser SDK for the Excalibur logging platform: error capture, sessions, and user tracking.",
   "keywords": [
     "excalibur",

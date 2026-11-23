@@ -1,4 +1,4 @@
-# @excalibur/browser
+# @excalibur-js/browser
 
 Browser SDK for the Excalibur logging platform. Captures uncaught errors and
 unhandled promise rejections, attaches user/session/environment context, and
@@ -15,19 +15,19 @@ npm install git+https://github.com/LiVIU245/excalibur-browser.git
 Or pinned to a commit in package.json:
 
 ```json
-"@excalibur/browser": "git+https://github.com/LiVIU245/excalibur-browser.git#<sha>"
+"@excalibur-js/browser": "git+https://github.com/LiVIU245/excalibur-browser.git#<sha>"
 ```
 
 Once published to npm:
 
 ```sh
-npm install @excalibur/browser
+npm install @excalibur-js/browser
 ```
 
 ## Quick start
 
 ```ts
-import { ExcaliburClient } from '@excalibur/browser';
+import { ExcaliburClient } from '@excalibur-js/browser';
 
 const excalibur = new ExcaliburClient({
   apiKey: 'exc_xxxxxxxxxxxxxxxx',
