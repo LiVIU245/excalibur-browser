@@ -6,20 +6,6 @@ ships entries to the ingest API.
 
 ## Install
 
-From git (the `prepare` script builds `dist/` on install):
-
-```sh
-npm install git+https://github.com/LiVIU245/excalibur-browser.git
-```
-
-Or pinned to a commit in package.json:
-
-```json
-"@excalibur-js/browser": "git+https://github.com/LiVIU245/excalibur-browser.git#<sha>"
-```
-
-Once published to npm:
-
 ```sh
 npm install @excalibur-js/browser
 ```
@@ -31,7 +17,6 @@ import { ExcaliburClient } from '@excalibur-js/browser';
 
 const excalibur = new ExcaliburClient({
   apiKey: 'exc_xxxxxxxxxxxxxxxx',
-  endpoint: 'https://excalibur.example.com/api/entries',
   version: '1.4.2',
   environment: 'staging',
 });
@@ -89,7 +74,7 @@ try {
 | Option            | Default        | Description                                          |
 | ----------------- | -------------- | ---------------------------------------------------- |
 | `apiKey`          | — (required)   | SDK key minted with the application (`exc_...`)      |
-| `endpoint`        | `/api/entries` | Absolute URL or path relative to the current origin  |
+| `endpoint`        | `https://excalibur.codes/api/entries` | Absolute URL or path relative to the current origin (self-hosted servers) |
 | `version`         | —              | Application version reported with every entry        |
 | `environment`     | `production`   | Deployment environment reported with every entry     |
 | `tags`            | `[]`           | Tags appended to every entry                         |

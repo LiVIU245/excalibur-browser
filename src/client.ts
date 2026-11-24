@@ -12,13 +12,15 @@ import { CLIENT_NAME, CLIENT_VERSION } from './version';
 import { WindowHooks, type CaptureExtras } from './window-hooks';
 import type { IngestPayload } from './payload';
 
+const DEFAULT_ENDPOINT = 'https://excalibur.codes/api/entries';
+
 export interface ExcaliburClientOptions {
   /** SDK key minted with the application (exc_...). */
   apiKey: string;
 
   /**
    * Ingest endpoint — an absolute URL to the Excalibur server, or a path
-   * relative to the current origin. Defaults to `/api/entries`.
+   * relative to the current origin. Defaults to the hosted Excalibur ingest API.
    */
   endpoint: string;
 
@@ -67,7 +69,7 @@ export class ExcaliburClient {
     this.options = options;
     this.apiOptions = {
       apiKey: options.apiKey,
-      endpoint: options.endpoint ?? '/api/entries',
+      endpoint: options.endpoint ?? DEFAULT_ENDPOINT,
       fetch: options.fetch ?? ((...args) => fetch(...args)),
     };
     this.breadcrumbs = new BreadcrumbBuffer(options.breadcrumbLimit);
