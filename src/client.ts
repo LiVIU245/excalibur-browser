@@ -13,7 +13,7 @@ import { CLIENT_NAME, CLIENT_VERSION } from './version';
 import { WindowHooks, type CaptureExtras, type HookTarget } from './window-hooks';
 import type { IngestPayload } from './payload';
 
-const DEFAULT_ENDPOINT = 'https://excalibur.codes/api/entries';
+const ENDPOINT = 'https://excalibur.codes/api/entries';
 
 // Browser noise that is never actionable
 const DEFAULT_IGNORED_ERRORS: Array<string | RegExp> = [/^ResizeObserver loop/];
@@ -21,12 +21,6 @@ const DEFAULT_IGNORED_ERRORS: Array<string | RegExp> = [/^ResizeObserver loop/];
 export interface ExcaliburOptions {
   /** SDK key minted with the application (exc_...). */
   apiKey: string;
-
-  /**
-   * Ingest endpoint — an absolute URL to the Excalibur server, or a path
-   * relative to the current origin. Defaults to the hosted Excalibur ingest API.
-   */
-  endpoint: string;
 
   /** Application version reported with every entry. */
   version: string;
@@ -98,7 +92,7 @@ export class Excalibur {
     this.options = options;
     this.apiOptions = {
       apiKey: options.apiKey,
-      endpoint: options.endpoint ?? DEFAULT_ENDPOINT,
+      endpoint: ENDPOINT,
       fetch: options.fetch ?? ((...args) => fetch(...args)),
     };
     this.guard = new SendGuard({ maxPerMinute: options.maxPerMinute });

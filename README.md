@@ -80,7 +80,6 @@ try {
 | Option            | Default        | Description                                          |
 | ----------------- | -------------- | ---------------------------------------------------- |
 | `apiKey`          | — (required)   | SDK key minted with the application (`exc_...`)      |
-| `endpoint`        | `https://excalibur.codes/api/entries` | Absolute URL or path relative to the current origin (self-hosted servers) |
 | `version`         | —              | Application version reported with every entry        |
 | `environment`     | `production`   | Deployment environment reported with every entry     |
 | `tags`            | `[]`           | Tags appended to every entry                         |
