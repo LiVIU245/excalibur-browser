@@ -61,11 +61,17 @@ function parseGeckoLine(line: string): StackFrame | null {
   };
 }
 
+// Real frames are short; long lines are message text and make the frame regexes slow
+const MAX_LINE_LENGTH = 2_000;
+const MAX_FRAMES = 100;
+
 export function parseStackTrace(stackString: string | undefined): StackFrame[] {
   if (!stackString) return [];
 
   const frames: StackFrame[] = [];
   for (const line of stackString.split('\n')) {
+    if (frames.length >= MAX_FRAMES) break;
+    if (line.length > MAX_LINE_LENGTH) continue;
     // Skip the "Error: message" preamble Chrome includes.
     if (/^\s*\S*Error(:|$)/.test(line)) continue;
 

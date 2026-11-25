@@ -3,8 +3,13 @@ import { generateUuid } from './uuid';
 const SESSION_STORAGE_KEY = 'excalibur:session-id';
 
 function defaultStorage(): Storage | null {
-  if (typeof sessionStorage === 'undefined') return null;
-  return sessionStorage;
+  // Reading the global itself throws in sandboxed iframes and when site data is blocked
+  try {
+    if (typeof sessionStorage === 'undefined') return null;
+    return sessionStorage;
+  } catch {
+    return null;
+  }
 }
 
 /**

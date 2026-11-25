@@ -1,12 +1,24 @@
+import { toError } from './to-error';
+
 export interface CaptureExtras {
   tags?: string[];
   customData?: Record<string, unknown>;
+}
+
+/** A window, or a worker / service worker global scope. */
+export type HookTarget = Pick<EventTarget, 'addEventListener' | 'removeEventListener'>;
+
+// `window` in pages, `self` in workers and extension service workers
+function defaultTarget(): HookTarget | null {
+  if (typeof globalThis.addEventListener !== 'function') return null;
+  return globalThis;
 }
 
 export type ErrorCapture = (error: Error, extras?: CaptureExtras) => void;
 
 function errorFromEvent(event: ErrorEvent): Error {
   if (event.error instanceof Error) return event.error;
+  if (event.error != null) return toError(event.error);
 
   // Cross-origin scripts yield "Script error." with no Error object;
   // synthesize one so the location still reaches the stack parser.
@@ -18,13 +30,12 @@ function errorFromEvent(event: ErrorEvent): Error {
 }
 
 function errorFromRejection(event: PromiseRejectionEvent): Error {
-  if (event.reason instanceof Error) return event.reason;
-
-  const error = new Error(
-    typeof event.reason === 'string' ? event.reason : JSON.stringify(event.reason),
-  );
-  error.name = 'UnhandledRejection';
-  return error;
+  if (event.reason == null) {
+    const error = new Error(`Promise rejected with ${event.reason}`);
+    error.name = 'UnhandledRejection';
+    return error;
+  }
+  return toError(event.reason, 'UnhandledRejection');
 }
 
 /**
@@ -33,7 +44,7 @@ function errorFromRejection(event: PromiseRejectionEvent): Error {
  * composes with other handlers and detaches cleanly.
  */
 export class WindowHooks {
-  private target: Window | null = null;
+  private target: HookTarget | null = null;
 
   constructor(private readonly capture: ErrorCapture) {}
 
@@ -49,11 +60,13 @@ export class WindowHooks {
     });
   };
 
-  attach(target?: Window): void {
+  attach(target?: HookTarget): void {
     if (this.target) return;
-    if (!target && typeof window === 'undefined') return;
 
-    this.target = target ?? window;
+    const resolved = target ?? defaultTarget();
+    if (!resolved) return;
+
+    this.target = resolved;
     this.target.addEventListener('error', this.onError);
     this.target.addEventListener('unhandledrejection', this.onRejection);
   }

@@ -12,6 +12,10 @@ export interface UserDetails {
   uuid?: string;
 }
 
+// Used where localStorage is missing or blocked (service workers, sandboxed iframes),
+// so one run still reports as one visitor rather than a new one per event
+let memoryId: string | null = null;
+
 /** Stable anonymous identity, persisted in localStorage across sessions. */
 export function anonymousUser(): UserDetails {
   let uuid: string | null = null;
@@ -19,12 +23,13 @@ export function anonymousUser(): UserDetails {
   try {
     uuid = localStorage.getItem(ANONYMOUS_STORAGE_KEY);
     if (!uuid) {
-      uuid = generateUuid();
+      uuid = memoryId ?? generateUuid();
       localStorage.setItem(ANONYMOUS_STORAGE_KEY, uuid);
     }
   } catch {
-    uuid = generateUuid();
+    uuid = memoryId ?? generateUuid();
   }
+  memoryId = uuid;
 
   return { identifier: uuid, isAnonymous: true, uuid };
 }

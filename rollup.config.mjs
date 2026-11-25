@@ -1,10 +1,13 @@
 import dts from 'rollup-plugin-dts';
+import { readFileSync } from 'node:fs';
 import esbuild from 'rollup-plugin-esbuild';
+
+const { version } = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 export default [
   {
     input: 'src/_module.ts',
-    plugins: [esbuild()],
+    plugins: [esbuild({ define: { __SDK_VERSION__: JSON.stringify(version) } })],
     output: [
       {
         file: 'dist/cjs/index.cjs',

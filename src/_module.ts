@@ -1,5 +1,6 @@
-export { ExcaliburClient, type ExcaliburClientOptions } from './client';
+export { Excalibur, type ExcaliburOptions } from './client';
 export { ApiError } from './errors';
+export type { ParamMatcher } from './request';
 export { SessionManager } from './session';
 export {
   BreadcrumbBuffer,
@@ -12,6 +13,7 @@ export {
   WindowHooks,
   type CaptureExtras,
   type ErrorCapture,
+  type HookTarget,
 } from './window-hooks';
 export type {
   IngestPayload,
